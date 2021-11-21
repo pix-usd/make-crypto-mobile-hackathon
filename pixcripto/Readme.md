@@ -4,29 +4,36 @@ _This is a sample submission repository.
 Please [__fork this repo__](https://help.github.com/articles/fork-a-repo/) and use this as a starting point for your hackathon project._
 
 ## Project Name
+Pixcripto
 ### Team name
 
 ##### Region location
+South America, São paulo - SP, Brazil
 
 ##### Team Members
-- Teammate 1, role
-- Teammate 2, role
-- Teammate 3, role
+- Gustavo Toledo, Fullstack Developer
+- Wellerson Rokembach, Backend Developer
+- Vitor Araujo, Fullstack Developer
 
 #### Project Description
-Provide a clear statement of the challenges/issues/problems/gaps your project engages as well as a brief, high-level description of how your project engages the areas you've identified. What is the value of your approach? Who are the intended users?
+Through the PIX payment method, which was created by the central bank, being the best means of value transfer in Brazil, working 24/7, we were able to make our platform do an automatic cryptocurrency purchase as soon as it receives a PIX transfer from a customer, making it easy for anyone to access the cryptocurrency market.
+It is worth saying, PIX is a payment method used by 100 million people and 7 million companies in Brazil.
+
+We had several challenges, among them choosing which database to use (postgres or mysql) and how to organize the routes for the frontend to communicate with the API. 
 
 #### Summary
-Describe the basic functionality of your project. What are the features you were able to implement? What features would you like to implement?
+The project should work to make automatic cryptocurrency purchases as soon as it receives a transaction through the PIX payment method.
+
+Currently it has the registration, login, and fiat money deposit functions, we would like to implement the withdrawal function, so that the customer can withdraw their cryptocurrencies and do self-custody. 
 
 #### URLs
-List any URLs relevant to demonstrating your prototype
+[APP demo](https://youtu.be/l89QvOfxkPA)
 
 #### Presentation
-List any links to your presentation or any related visuals you want to share.
+[Presentation](https://docs.google.com/presentation/d/1bsuUoH_eIzHnKp66YDp1_QcbBy3QMy9xDHMFE-I6dqQ/edit?usp=sharing)
 
 #### Next Steps
-What do you need to do next to turn this prototype into a working solution?
+Integrate cryptocurrency brokerages to make the purchase actually happen, integrate PIX to receive fiat money, and then the application will be up and running in a real way.
 
 #### License
 This repository includes an [unlicensed](http://unlicense.org/) statement though you may want to [choose a different license](https://choosealicense.com/).
