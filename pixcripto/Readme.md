@@ -27,7 +27,7 @@ The project should work to make automatic cryptocurrency purchases as soon as it
 Currently it has the registration, login, and fiat money deposit functions, we would like to implement the withdrawal function, so that the customer can withdraw their cryptocurrencies and do self-custody. 
 
 #### URLs
-[APP demo video](https://youtu.be/sTytge1PVAw)
+[APP demo video](https://youtu.be/hFl-RDLSu8c)
 
 #### Presentation
 [Presentation](https://docs.google.com/presentation/d/1bsuUoH_eIzHnKp66YDp1_QcbBy3QMy9xDHMFE-I6dqQ/edit?usp=sharing)
