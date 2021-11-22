@@ -1,7 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:pixcripto/common/primary_button.dart';
+import 'package:pixcripto/services/pixcripto_api.dart';
+import 'package:pixcripto/stores/user_store.dart';
 import 'package:pixcripto/styles.dart';
+import 'package:pixcripto/utils/BN.dart';
+import 'package:provider/provider.dart';
 
 class ConfirmSendModal extends StatefulWidget {
   final String address;
@@ -58,6 +63,8 @@ class _ConfirmSendModalState extends State<ConfirmSendModal> {
 
   @override
   Widget build(BuildContext context) {
+    final userStore = Provider.of<UserStore>(context);
+
     return Column(
       children: [
         Spacer(),
@@ -97,61 +104,62 @@ class _ConfirmSendModalState extends State<ConfirmSendModal> {
           defaultColumnWidth: FixedColumnWidth(150.0),
           children: [
             this.createTableRow(
-                context,
-                'Quantidade',
-                this.amount == 0
-                    ? 'Toque para alterar'
-                    : this.amount.toString(),
-                () => showDialog(
-                    context: context,
-                    builder: (context) {
-                      return AlertDialog(
-                        content: TextField(
-                          onChanged: (value) {
+              context,
+              'Quantidade',
+              this.amount == 0
+                  ? 'Toque para alterar'
+                  : BN(this.amount, this.tokenToSend).toCurrencyLocale(),
+              () => showDialog(
+                  context: context,
+                  builder: (context) {
+                    return AlertDialog(
+                      content: TextField(
+                        onChanged: (value) {
+                          setState(() {
+                            amount = double.tryParse(value) ?? 0;
+                          });
+                        },
+                        //  controller: _textFieldController,
+                        decoration: InputDecoration(
+                          fillColor: AppColors.graphiteGrayOp10,
+                          filled: true,
+                          focusColor: AppColors.graphiteGrayOp10,
+                          hintText: 'Informe a quantia',
+                          // label: Text(label),
+                          enabledBorder: OutlineInputBorder(
+                            //Outline border type for TextFeild
+                            borderRadius: BorderRadius.all(
+                              Radius.circular(AppBorderRadius.radius10),
+                            ),
+                            borderSide: BorderSide(
+                              color: AppColors.transparent,
+                            ),
+                          ),
+                          focusedBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.all(
+                              Radius.circular(AppBorderRadius.radius10),
+                            ),
+                            borderSide: BorderSide(
+                              color: AppColors.transparent,
+                            ),
+                          ),
+                        ),
+                        keyboardType: TextInputType.number,
+                      ),
+                      actions: <Widget>[
+                        PrimaryButton(
+                          color: Colors.green,
+                          child: Text('Feito'),
+                          onPressed: () {
                             setState(() {
-                              amount = double.tryParse(value) ?? 0;
+                              Navigator.pop(context);
                             });
                           },
-                          //  controller: _textFieldController,
-                          decoration: InputDecoration(
-                            fillColor: AppColors.graphiteGrayOp10,
-                            filled: true,
-                            focusColor: AppColors.graphiteGrayOp10,
-                            hintText: 'Informe a quantia',
-                            // label: Text(label),
-                            enabledBorder: OutlineInputBorder(
-                              //Outline border type for TextFeild
-                              borderRadius: BorderRadius.all(
-                                Radius.circular(AppBorderRadius.radius10),
-                              ),
-                              borderSide: BorderSide(
-                                color: AppColors.transparent,
-                              ),
-                            ),
-                            focusedBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.all(
-                                Radius.circular(AppBorderRadius.radius10),
-                              ),
-                              borderSide: BorderSide(
-                                color: AppColors.transparent,
-                              ),
-                            ),
-                          ),
-                          keyboardType: TextInputType.number,
                         ),
-                        actions: <Widget>[
-                          PrimaryButton(
-                            color: Colors.green,
-                            child: Text('Feito'),
-                            onPressed: () {
-                              setState(() {
-                                Navigator.pop(context);
-                              });
-                            },
-                          ),
-                        ],
-                      );
-                    })),
+                      ],
+                    );
+                  }),
+            ),
             this.createTableRow(
               context,
               'Endereço',
@@ -165,10 +173,23 @@ class _ConfirmSendModalState extends State<ConfirmSendModal> {
         Container(
           width: double.infinity,
           padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
-          child: PrimaryButton(
-            onPressed: this.amount != 0 ? () => this.send(context) : null,
-            child: Text('Enviar'),
-          ),
+          child: Observer(builder: (_) {
+            bool hasBalance = (tokenToSend == 'CUSD'
+                    ? userStore.balances.CUSD
+                    : userStore.balances.MCO2) >=
+                this.amount;
+
+            print('balances inside confirm ${userStore.balances.totalinbrl}');
+            print(
+                'amount $amount hasBalance $hasBalance balance ${(tokenToSend == 'CUSD' ? userStore.balances.CUSD : userStore.balances.MCO2)}');
+
+            return PrimaryButton(
+              onPressed: (this.amount != 0 && hasBalance)
+                  ? () => this.send(context)
+                  : null,
+              child: Text(hasBalance ? 'Enviar' : 'Saldo insuficiente'),
+            );
+          }),
         ),
         Spacer(),
       ],
@@ -176,9 +197,17 @@ class _ConfirmSendModalState extends State<ConfirmSendModal> {
   }
 
   void send(BuildContext context) {
-    // send post to api
+    final pixCriptoApi = Provider.of<PixCriptoAPI>(context, listen: false);
 
-    Navigator.of(context).pop();
-    Navigator.of(context).pop();
+    pixCriptoApi.dio.post('/withdraw', data: {
+      'address': widget.address,
+      'amount': this.amount,
+    }).then((value) {
+      print('saque deu certo $value');
+      Navigator.of(context).pop();
+      Navigator.of(context).pop();
+    }).catchError((e) {
+      print('saque deu errado $e');
+    });
   }
 }

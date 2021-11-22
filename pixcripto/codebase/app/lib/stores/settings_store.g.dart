@@ -48,13 +48,13 @@ mixin _$SettingsStore on _SettingsStore, Store {
     return _$toggleHideBalanceAsyncAction.run(() => super.toggleHideBalance());
   }
 
-  final _$hideInstructionsPixAsyncAction =
-      AsyncAction('_SettingsStore.hideInstructionsPix');
+  final _$toggleInstructionsPixAsyncAction =
+      AsyncAction('_SettingsStore.toggleInstructionsPix');
 
   @override
-  Future<void> hideInstructionsPix() {
-    return _$hideInstructionsPixAsyncAction
-        .run(() => super.hideInstructionsPix());
+  Future<void> toggleInstructionsPix() {
+    return _$toggleInstructionsPixAsyncAction
+        .run(() => super.toggleInstructionsPix());
   }
 
   @override

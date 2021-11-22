@@ -16,11 +16,11 @@ class PreferencesService {
   bool get showInstructionsPix =>
       sharedPreferences.getBool(LocalStorageKeys.showInstructionsPix) ?? true;
 
-  void hideInstructionsPix() =>
-      sharedPreferences.setBool(LocalStorageKeys.showInstructionsPix, false);
+  void toggleInstructionsPix() => sharedPreferences.setBool(
+      LocalStorageKeys.showInstructionsPix, !this.showInstructionsPix);
 
-  String get jwt => sharedPreferences.getString(LocalStorageKeys.jwt) ?? '';
+  String? get jwt => sharedPreferences.getString(LocalStorageKeys.jwt);
 
-  void set jwt(String jwt) =>
-      sharedPreferences.setString(LocalStorageKeys.jwt, jwt);
+  void set jwt(String? jwt) =>
+      sharedPreferences.setString(LocalStorageKeys.jwt, jwt!);
 }

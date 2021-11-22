@@ -4,6 +4,7 @@ import 'package:pixcripto/screens/home/instructions.dart';
 import 'package:pixcripto/screens/login.dart';
 import 'package:pixcripto/screens/register.dart';
 import 'package:pixcripto/screens/send/widgets/qr_scan.dart';
+import 'package:pixcripto/screens/splash.dart';
 
 import './navigators_keys.dart';
 
@@ -25,7 +26,7 @@ class MainRouteNames {
 }
 
 final Map<String, Widget> routes = {
-  MainRouteNames.root: Login(),
+  MainRouteNames.root: Splash(),
   MainRouteNames.register: Register(),
   MainRouteNames.login: Login(),
   MainRouteNames.instructions: Instructions(),

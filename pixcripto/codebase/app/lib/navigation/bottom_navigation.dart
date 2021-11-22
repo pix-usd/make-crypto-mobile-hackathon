@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:pixcripto/screens/home/home.dart';
 import 'package:pixcripto/screens/send/send.dart';
+import 'package:pixcripto/screens/settings/settings.dart';
 import 'package:pixcripto/styles.dart';
 
 class BottomNavigation extends StatefulWidget {
@@ -15,6 +16,7 @@ class _BottomNavigationState extends State<BottomNavigation> {
   final List<Widget> _telas = [
     Home(),
     Send(),
+    Settings(),
   ];
 
   late PageController _pageController;
@@ -69,7 +71,7 @@ class _BottomNavigationState extends State<BottomNavigation> {
           ),
           BottomNavyBarItem(
             icon: SvgPicture.asset(AppIcons.menu, color: AppColors.celoColor),
-            title: Text("Configurações"),
+            title: Text("Menu"),
             inactiveColor: AppColors.celoColor,
             activeColor: AppColors.celoColor,
           ),

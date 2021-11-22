@@ -476,6 +476,8 @@ class AppProportions {
 final DateFormat formatter = DateFormat('dd/MM/yyy HH:mm:ss');
 
 class AppFormats {
+  static final NumberFormat moneyFormat = NumberFormat.currency(symbol: 'R\$ ');
+
   static String getFormattedDate(DateTime date) {
     return formatter.format(date);
   }

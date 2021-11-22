@@ -92,6 +92,26 @@ class _QRScanState extends State<QRScan> {
             onQRViewCreated: _onQRViewCreated,
           ),
           Positioned(
+            left: 0,
+            top: 40,
+            // bottom: AppSpacing.space30,
+            child: Container(
+              padding: const EdgeInsets.fromLTRB(20, 0, 0, 0),
+              child: Container(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.all(Radius.circular(30)),
+                  color: AppColors.celoColor,
+                  // boxShadow: [
+                  //   BoxShadow(color: AppColors.blackOp75, spreadRadius: 3),
+                  // ],
+                ),
+                child: CloseButton(
+                  onPressed: () => Navigator.of(context).pop(),
+                ),
+              ),
+            ),
+          ),
+          Positioned(
             right: 0,
             left: 0,
             bottom: AppSpacing.space30,

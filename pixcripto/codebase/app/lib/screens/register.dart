@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:pixcripto/common/primary_button.dart';
 import 'package:pixcripto/forms/register/register_controller.dart';
 import 'package:pixcripto/navigation/main_navigator.dart';
+import 'package:pixcripto/services/pixcripto_api.dart';
 import 'package:pixcripto/styles.dart';
+import 'package:provider/provider.dart';
 
 class Register extends StatelessWidget {
   Register({Key? key}) : super(key: key);
@@ -10,6 +12,31 @@ class Register extends StatelessWidget {
   final GlobalKey<FormState> formKey = new GlobalKey();
 
   final formController = RegisterController();
+
+  void _register(BuildContext context) {
+    final api = Provider.of<PixCriptoAPI>(
+      context,
+      listen: false,
+    );
+    api.dio.post('/register', data: {
+      'name': formController.model.name,
+      'cpf': formController.model.cpf,
+      'email': formController.model.email,
+      'password': formController.model.password
+    }).then(
+      (value) {
+        print('---- logged --- $value');
+        // If the form is valid, display a snackbar. In the real world,
+        // you'd often call a server or save the information in a database.
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Registrado com sucesso!')),
+        );
+      },
+    ).catchError((e) {
+      print(e.response);
+      print('error --- $e');
+    });
+  }
 
   TextFormField _textField(
       {required String label,
@@ -145,13 +172,14 @@ class Register extends StatelessWidget {
             // child: Container(
             child: PrimaryButton(
               onPressed: () {
-                Navigator.of(context)
-                    .pushReplacementNamed(MainRouteNames.login);
+                // Navigator.of(context)
+                //     .pushReplacementNamed(MainRouteNames.login);
                 if (this.formKey.currentState!.validate()) {
+                  _register(context);
                   // If the form is valid, display a snackbar. In the real world,
                   // you'd often call a server or save the information in a database.
                   ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text('Processing Data')),
+                    const SnackBar(content: Text('Processando...')),
                   );
                 }
               },

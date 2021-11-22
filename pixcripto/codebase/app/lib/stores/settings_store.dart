@@ -26,8 +26,8 @@ abstract class _SettingsStore with Store {
   }
 
   @action
-  Future<void> hideInstructionsPix() async {
-    _preferencesService.hideInstructionsPix();
-    showInstructionsPix = false;
+  Future<void> toggleInstructionsPix() async {
+    _preferencesService.toggleInstructionsPix();
+    showInstructionsPix = !this.showInstructionsPix;
   }
 }

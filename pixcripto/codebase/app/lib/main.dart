@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:pixcripto/routes.dart';
-import 'package:pixcripto/screens/splash.dart';
+import 'package:pixcripto/navigation/main_navigator.dart';
 import 'package:pixcripto/services/pixcripto_api.dart';
 import 'package:pixcripto/services/preferences_service.dart';
 import 'package:pixcripto/stores/settings_store.dart';
@@ -10,8 +9,6 @@ import 'package:pixcripto/styles.dart';
 import 'package:pixcripto/utils/unfocus.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
-final api = PixCriptoAPI();
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -35,18 +32,18 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-        Provider<PixCriptoAPI>.value(
-          value: PixCriptoAPI(),
-        ),
         Provider<PreferencesService>.value(
           value: PreferencesService(this.sharedPreferences),
+        ),
+        Provider<PixCriptoAPI>.value(
+          value: PixCriptoAPI(this.sharedPreferences),
         ),
         ProxyProvider<PreferencesService, SettingsStore>(
           update: (_, preferencesService, __) =>
               SettingsStore(preferencesService),
         ),
-        Provider<UserStore>.value(
-          value: UserStore(),
+        ProxyProvider<PixCriptoAPI, UserStore>(
+          update: (_, pixCriptoApi, __) => UserStore(pixCriptoApi),
         ),
       ],
       child: AnnotatedRegion<SystemUiOverlayStyle>(
@@ -59,9 +56,9 @@ class MyApp extends StatelessWidget {
             debugShowCheckedModeBanner: false,
             title: 'PixCripto',
             theme: AppTheme.theme,
-            home: Splash(),
+            // home: Splash(),
             onGenerateRoute: (routeSettings) =>
-                Routes.generateRoute(routeSettings),
+                MainNavigator.generateRoute(routeSettings),
           ),
         ),
       ),

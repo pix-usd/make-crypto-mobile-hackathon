@@ -12,7 +12,7 @@ class Instructions extends StatelessWidget {
     SettingsStore settingsStore =
         Provider.of<SettingsStore>(context, listen: false);
 
-    await settingsStore.hideInstructionsPix();
+    await settingsStore.toggleInstructionsPix();
 
     Navigator.of(context).pop();
   }

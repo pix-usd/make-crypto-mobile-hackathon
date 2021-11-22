@@ -2,11 +2,31 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:pixcripto/common/primary_button.dart';
 import 'package:pixcripto/navigation/main_navigator.dart';
-import 'package:pixcripto/routes.dart';
+import 'package:pixcripto/services/preferences_service.dart';
+import 'package:pixcripto/stores/user_store.dart';
 import 'package:pixcripto/styles.dart';
+import 'package:provider/provider.dart';
 
 class Splash extends StatelessWidget {
   const Splash({Key? key}) : super(key: key);
+
+  void signIn(BuildContext context) {
+    final preferencesService = Provider.of<PreferencesService>(
+      context,
+      listen: false,
+    );
+
+    final userStore = Provider.of<UserStore>(context, listen: false);
+
+    String? token = preferencesService.jwt;
+
+    if (token != null) {
+      userStore.loggedIn();
+      Navigator.of(context).pushReplacementNamed(MainRouteNames.home);
+    } else {
+      Navigator.of(context).pushReplacementNamed(MainRouteNames.login);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -41,8 +61,7 @@ class Splash extends StatelessWidget {
               padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
               child: PrimaryButton(
                 onPressed: () {
-                  Navigator.of(context)
-                      .pushReplacementNamed(RouteNames.mainNavigator);
+                  this.signIn(context);
                 },
                 child: Text('Entrar'),
               ),

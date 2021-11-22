@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:pixcripto/common/show_bottom_dialog.dart';
+import 'package:pixcripto/stores/settings_store.dart';
 import 'package:pixcripto/stores/user_store.dart';
 import 'package:pixcripto/styles.dart';
+import 'package:pixcripto/utils/BN.dart';
 import 'package:provider/provider.dart';
 
 class AutoBuyBalances extends StatelessWidget {
@@ -13,8 +15,9 @@ class AutoBuyBalances extends StatelessWidget {
     BuildContext context,
     String name,
     String symbol,
-    double amount,
+    num amount,
   ) {
+    final settingsStore = Provider.of<SettingsStore>(context);
     UserStore userStore = Provider.of<UserStore>(context);
 
     return TableRow(
@@ -61,8 +64,12 @@ class AutoBuyBalances extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
               Text(
-                amount.toString() + ' ' + symbol.toUpperCase(),
-                style: Theme.of(context).textTheme.headline4,
+                (settingsStore.showBalance
+                        ? BN(amount, symbol).toCurrencyFixed()
+                        : '*****') +
+                    ' ' +
+                    symbol.toUpperCase(),
+                style: Theme.of(context).textTheme.headline5,
               ),
               SizedBox(
                 width: AppSpacing.space10,
@@ -149,6 +156,8 @@ class AutoBuyBalances extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final userStore = Provider.of<UserStore>(context, listen: true);
+
     return SizedBox(
       width: double.infinity,
       child: Card(
@@ -159,17 +168,29 @@ class AutoBuyBalances extends StatelessWidget {
           ),
           child: Column(
             children: [
-              Table(
-                defaultColumnWidth: FixedColumnWidth(150.0),
-                border: TableBorder(
-                  horizontalInside:
-                      BorderSide(width: 1, color: AppColors.graphiteGrayOp10),
-                ),
-                children: [
-                  _criarLinhaTable(context, "Celo Dollar", "CUSD", 0),
-                  _criarLinhaTable(context, "Moss Carbon Credit", "MCO2", 0),
-                ],
-              ),
+              Observer(builder: (_) {
+                return Table(
+                  defaultColumnWidth: FixedColumnWidth(150.0),
+                  border: TableBorder(
+                    horizontalInside:
+                        BorderSide(width: 1, color: AppColors.graphiteGrayOp10),
+                  ),
+                  children: [
+                    _criarLinhaTable(
+                      context,
+                      "Celo Dollar",
+                      "CUSD",
+                      userStore.balances.CUSD,
+                    ),
+                    _criarLinhaTable(
+                      context,
+                      "Moss Carbon Credit",
+                      "MCO2",
+                      userStore.balances.MCO2,
+                    ),
+                  ],
+                );
+              }),
               SizedBox(
                 height: AppSpacing.space20,
               ),
